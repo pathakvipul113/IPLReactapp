@@ -123,23 +123,8 @@ class Scorecard extends Component {
         var list1 = []
 
         return (
-            <div className="container-fluid">
-                <div>
-                    {this.state.data3 ? this.state.data3.map((item, key) => {
-                        if (item.Innings[0])
-                            return (
-                                <div>
-                                    <div style={{ background: 'red', color: 'white' }}>{item.status}</div>
-                                    <div key={key} className="batteam">
-                                        {item.Innings[0].bat_team_name} Innings
-                                </div>
-                                </div>
-                            )
-                    }
-                    ) : <p>Wait.. Data is fetching/</p>}
-                </div>
-                <table className="table">
-
+            <table className="table">
+                <thead>
                     {heading.map((item, i) => {
                         return (
                             <tr key={i} className="back">
@@ -153,137 +138,150 @@ class Scorecard extends Component {
 
                         )
                     })}
-                    <tbody>
-                        {this.state.data3 ? this.state.data3.map((item, key) => {
-                            if (item.Innings[0])
-                                for (var i = 0; i < (item.Innings[0].next_batsman).split(',').length; i++) {
-                                    list.push(this.player_name1((item.Innings[0].next_batsman).split(',')[i]), ',')
+                </thead>
 
+                {this.state.data3 ? this.state.data3.map((item, key) => {
+                    if (item.Innings[0])
+                        return (
+                            <tr key="key">
+                                <div style={{ background: 'red', color: 'white' }}>{item.status}</div>
+                                <div key={key} className="batteam">
+                                    {item.Innings[0].bat_team_name} Innings
+                                </div>
+                            </tr>
+                        )
+                }
+                ) : <p>Wait.. Data is fetching/</p>}
+
+
+                {this.state.data3 ? this.state.data3.map((item, key) => {
+                    if (item.Innings[0] && item.Innings[0].next_batsman)
+                        for (var i = 0; i < (item.Innings[0].next_batsman).split(',').length; i++) {
+                            list.push(this.player_name1((item.Innings[0].next_batsman).split(',')[i]), ',')
+
+                        }
+
+                    if (item.Innings[0]) {
+                        return (
+
+                            <div key={key}>
+
+                                {(item.Innings[0].batsmen).map((head, i) => {
+                                    // if (item.hasOwnProperty('fow'))
+                                    return (
+                                        <tr key={i} >
+                                            <td> {this.player_name1(head.id)} </td>
+                                            <td> {head.out_desc} </td>
+                                            <td> {head.r} </td>
+                                            <td> {head.b} </td>
+                                            <td> {head['4s']} </td>
+                                            <td> {head['6s']} </td>
+                                        </tr>
+                                    )
+                                }
+                                )
                                 }
 
-                            if (item.Innings[0]) {
-                                return (
-
-                                    <div key={key}>
-
-                                        {(item.Innings[0].batsmen).map((head, i) => {
-                                            // if (item.hasOwnProperty('fow'))
-                                            return (
-                                                <tr key={i} >
-                                                    <td> {this.player_name1(head.id)} </td>
-                                                    <td> {head.out_desc} </td>
-                                                    <td> {head.r} </td>
-                                                    <td> {head.b} </td>
-                                                    <td> {head['4s']} </td>
-                                                    <td> {head['6s']} </td>
-                                                </tr>
-                                            )
-                                        }
-                                        )
-                                        }
-
-                                        <div>
-                                            <tr><td>Extras </td><td textAlign="right">{item.Innings[0].extras.t} (
+                                <div>
+                                    <tr><td>Extras </td><td textAlign="right">{item.Innings[0].extras.t} (
                                         b {item.Innings[0].extras.b},
                                         lb {item.Innings[0].extras.lb},
                                         wd {item.Innings[0].extras.wd},
                                         nb {item.Innings[0].extras.nb},
                                         p {item.Innings[0].extras.p}
-                                                )</td></tr>
-                                            <tr><td>Total</td><td style={{ textAlign: 'right' }}> {item.Innings[0].score}({item.Innings[0].wkts}wkts, {item.Innings[0].ovr} Ovs)</td></tr>
-                                            <tr><td textAlign="left">{item.Innings[0].next_batsman_label}</td><td textAlign="right">{list}</td></tr>
-                                        </div>
-                                        <div>
-                                            <div className="back"> Fall of Wickets</div>
-                                            <th>Batsman</th>
-                                            <th>Score</th>
-                                            <th>Overs</th>
+                                        )</td></tr>
+                                    <tr><td>Total</td><td style={{ textAlign: 'right' }}> {item.Innings[0].score}({item.Innings[0].wkts}wkts, {item.Innings[0].ovr} Ovs)</td></tr>
+                                    <tr><td textAlign="left">{item.Innings[0].next_batsman_label}</td><td textAlign="right">{list}</td></tr>
+                                </div>
+                                <div>
+                                    <div className="back"> Fall of Wickets</div>
+                                    <th>Batsman</th>
+                                    <th>Score</th>
+                                    <th>Overs</th>
 
-                                            {item.Innings[0].fow ? item.Innings[0].fow.map((item, i) => {
+                                    {item.Innings[0].fow ? item.Innings[0].fow.map((item, i) => {
 
-                                                return (
-                                                    <tr key={i}>
-                                                        <td>{this.player_name1(item.id)}</td>
-                                                        <td>{item.score}</td>
-                                                        <td>{item.over}</td>
-                                                    </tr>
-                                                )
-                                            }) : ""}
-                                        </div>
+                                        return (
+                                            <tr key={i}>
+                                                <td>{this.player_name1(item.id)}</td>
+                                                <td>{item.score}</td>
+                                                <td>{item.over}</td>
+                                            </tr>
+                                        )
+                                    }) : ""}
+                                </div>
 
-                                        <div>
-                                            {bowling.map((item, i) => {
-                                                return (
-                                                    <tr key={i} className="back">
-                                                        <th>{item.b}</th>
-                                                        <th>{item.o}</th>
-                                                        <th>{item.m}</th>
-                                                        <th>{item.r}</th>
-                                                        <th>{item.w}</th>
-                                                        <th>{item.nb}</th>
-                                                        <th>{item.wd}</th>
-                                                    </tr>
-
-                                                )
-                                            })}
-                                            {item.Innings[0].bowlers.map((item, i) => {
-                                                return (
-                                                    <tr key={i}>
-                                                        <td textAlign="center">{this.player_name2(item.id)}</td>
-                                                        <td textAlign="center">{item.o}</td>
-                                                        <td textAlign="center">{item.m}</td>
-                                                        <td textAlign="center">{item.r}</td>
-                                                        <td textAlign="center">{item.w}</td>
-                                                        <td textAlign="center">{item.n}</td>
-                                                        <td textAlign="center">{item.wd}</td>
-                                                    </tr>
-                                                )
-                                            })}
-                                        </div>
-                                        <div>
-                                            <tr><th textAlign="center">PowerPlays</th>
-                                                <th textAlign="center">Overs</th>
-                                                <th textAlign="center">Runs</th>
-
+                                <div>
+                                    {bowling.map((item, i) => {
+                                        return (
+                                            <tr key={i} className="back">
+                                                <th>{item.b}</th>
+                                                <th>{item.o}</th>
+                                                <th>{item.m}</th>
+                                                <th>{item.r}</th>
+                                                <th>{item.w}</th>
+                                                <th>{item.nb}</th>
+                                                <th>{item.wd}</th>
                                             </tr>
 
-                                            {item.Innings[0].pplay.map((item, i) => {
-                                                return (
-                                                    <div>
-                                                        <tr><td textAlign="center">{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                                                            <td textAlign="center">{item.from}-{item.to}</td>
-                                                            <td textAlign="center">{item.runs}</td>
+                                        )
+                                    })}
+                                    {item.Innings[0].bowlers.map((item, i) => {
+                                        return (
+                                            <tr key={i}>
+                                                <td textAlign="center">{this.player_name2(item.id)}</td>
+                                                <td textAlign="center">{item.o}</td>
+                                                <td textAlign="center">{item.m}</td>
+                                                <td textAlign="center">{item.r}</td>
+                                                <td textAlign="center">{item.w}</td>
+                                                <td textAlign="center">{item.n}</td>
+                                                <td textAlign="center">{item.wd}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </div>
+                                <div>
+                                    <tr><th textAlign="center">PowerPlays</th>
+                                        <th textAlign="center">Overs</th>
+                                        <th textAlign="center">Runs</th>
 
-                                                        </tr>
-                                                    </div>
-                                                )
+                                    </tr>
 
-                                            }
-                                            )
-                                            }
+                                    {item.Innings[0].pplay.map((item, i) => {
+                                        return (
+                                            <div>
+                                                <tr><td textAlign="center">{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
+                                                    <td textAlign="center">{item.from}-{item.to}</td>
+                                                    <td textAlign="center">{item.runs}</td>
 
-                                        </div>
+                                                </tr>
+                                            </div>
+                                        )
 
-                                    </div>
-                                )
+                                    }
+                                    )
+                                    }
 
-                            }
-                            else {
-                                return (<div>
-                                    Not batted yet
+                                </div>
+
+                            </div>
+                        )
+
+                    }
+                    else {
+                        return (<div>
+                            Not batted yet
                                 </div>)
-                            }
-                        }) : <p>Wait.. Data is fetching/</p>
-                        }
+                    }
+                }) : <p>Wait.. Data is fetching/</p>
+                }
 
 
 
-                    </tbody>
-                </table >
 
                 <div>
                     {this.state.data3 ? this.state.data3.map((item, key) => {
-                        if (item.Innings[1])
+                        if (item.Innings[1] && item.Innings[1].next_batsman)
                             for (var i = 0; i < (item.Innings[1].next_batsman).split(',').length; i++) {
                                 list1.push(this.player_name2((item.Innings[1].next_batsman).split(',')[i]), ',')
 
@@ -298,141 +296,139 @@ class Scorecard extends Component {
                     }
                     ) : <p>Wait.. Data is fetching/</p>}
                 </div>
-                <table className="table">
-                    {heading.map((item, i) => {
-                        return (
-                            <tr key={i}>
-                                <th>{item.batsman}</th>
-                                <th>{item.dismissal}</th>
-                                <th>{item.runs}</th>
-                                <th>{item.balls}</th>
-                                <th>{item['4s']}</th>
-                                <th>{item['6s']}</th>
-                            </tr>
+                {heading.map((item, i) => {
+                    return (
+                        <tr key={i}>
+                            <th>{item.batsman}</th>
+                            <th>{item.dismissal}</th>
+                            <th>{item.runs}</th>
+                            <th>{item.balls}</th>
+                            <th>{item['4s']}</th>
+                            <th>{item['6s']}</th>
+                        </tr>
 
-                        )
-                    })}
-                    <tbody>
-                        {this.state.data3 ? this.state.data3.map((item, key) => {
-                            if (item.Innings[0] && item.Innings[1]) {
-                                return (
-                                    <div key={key}>
+                    )
+                })}
+                <tbody>
+                    {this.state.data3 ? this.state.data3.map((item, key) => {
+                        if (item.Innings[0] && item.Innings[1]) {
+                            return (
+                                <div key={key}>
 
-                                        {(item.Innings[1].batsmen).map((head, i) => {
-                                            return (
-                                                <tr key={i}>
-                                                    <td> {this.player_name2(head.id)} </td>
-                                                    <td> {head.out_desc} </td>
-                                                    <td> {head.r} </td>
-                                                    <td> {head.b} </td>
-                                                    <td> {head['4s']} </td>
-                                                    <td> {head['6s']} </td>
-                                                </tr>
-                                            )
-                                        }
+                                    {(item.Innings[1].batsmen).map((head, i) => {
+                                        return (
+                                            <tr key={i}>
+                                                <td> {this.player_name2(head.id)} </td>
+                                                <td> {head.out_desc} </td>
+                                                <td> {head.r} </td>
+                                                <td> {head.b} </td>
+                                                <td> {head['4s']} </td>
+                                                <td> {head['6s']} </td>
+                                            </tr>
                                         )
-                                        }
+                                    }
+                                    )
+                                    }
 
-                                        <div>
-                                            <tr><td>Extras </td><td textAlign="right">{item.Innings[0].extras.t} (
+                                    <div>
+                                        <tr><td>Extras </td><td textAlign="right">{item.Innings[0].extras.t} (
                                         b {item.Innings[1].extras.b},
                                         lb {item.Innings[1].extras.lb},
                                         wd {item.Innings[1].extras.wd},
                                         nb {item.Innings[1].extras.nb},
                                         p {item.Innings[1].extras.p}
-                                                )</td></tr>
-                                            <tr><td>Total</td><td style={{ textAlign: 'right' }}> {item.Innings[1].score}({item.Innings[1].wkts}wkts, {item.Innings[1].ovr} Ovs)</td></tr>
-                                            <tr><td>{item.Innings[0].next_batsman_label}</td><td textAlign="right">{list1}</td></tr>
-                                        </div>
-                                        <div>
-                                            Fall of Wickets
+                                            )</td></tr>
+                                        <tr><td>Total</td><td style={{ textAlign: 'right' }}> {item.Innings[1].score}({item.Innings[1].wkts}wkts, {item.Innings[1].ovr} Ovs)</td></tr>
+                                        <tr><td>{item.Innings[0].next_batsman_label}</td><td textAlign="right">{list1}</td></tr>
+                                    </div>
+                                    <div>
+                                        Fall of Wickets
                                                  <th>Batsman</th>
-                                            <th>Score</th>
-                                            <th>Overs</th>
+                                        <th>Score</th>
+                                        <th>Overs</th>
 
-                                            {item.Innings[1].fow.map((item, i) => {
-                                                return (
-                                                    <tr key={i}>
-                                                        <td>{this.player_name2(item.id)}</td>
-                                                        <td>{item.score}</td>
-                                                        <td>{item.over}</td>
-                                                    </tr>
-                                                )
-                                            })}
-                                        </div>
-
-                                        <div>
-                                            {bowling.map((item, i) => {
-                                                return (
-                                                    <tr key={i}>
-                                                        <th>{item.b}</th>
-                                                        <th>{item.o}</th>
-                                                        <th>{item.m}</th>
-                                                        <th>{item.r}</th>
-                                                        <th>{item.w}</th>
-                                                        <th>{item.nb}</th>
-                                                        <th>{item.wd}</th>
-                                                    </tr>
-
-                                                )
-                                            })}
-                                            {item.Innings[1].bowlers.map((item, i) => {
-                                                return (
-                                                    <tr key={i}>
-                                                        <td>{this.player_name1(item.id)}</td>
-                                                        <td>{item.o}</td>
-                                                        <td>{item.m}</td>
-                                                        <td>{item.r}</td>
-                                                        <td>{item.w}</td>
-                                                        <td>{item.n}</td>
-                                                        <td>{item.wd}</td>
-                                                    </tr>
-                                                )
-                                            })}
-                                        </div>
-                                        <div>
-                                            <tr><th textAlign="center">PowerPlays</th>
-                                                <th textAlign="center">Overs</th>
-                                                <th textAlign="center">Runs</th>
-
-                                            </tr>
-
-                                            {item.Innings[1].pplay.map((item, i) => {
-                                                return (
-                                                    <div>
-                                                        <tr><td textAlign="center">{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                                                            <td textAlign="center">{item.from}-{item.to}</td>
-                                                            <td textAlign="center">{item.runs}</td>
-
-                                                        </tr>
-                                                    </div>
-                                                )
-
-                                            }
+                                        {item.Innings[1].fow.map((item, i) => {
+                                            return (
+                                                <tr key={i}>
+                                                    <td>{this.player_name2(item.id)}</td>
+                                                    <td>{item.score}</td>
+                                                    <td>{item.over}</td>
+                                                </tr>
                                             )
-                                            }
+                                        })}
+                                    </div>
 
-                                        </div>
+                                    <div>
+                                        {bowling.map((item, i) => {
+                                            return (
+                                                <tr key={i}>
+                                                    <th>{item.b}</th>
+                                                    <th>{item.o}</th>
+                                                    <th>{item.m}</th>
+                                                    <th>{item.r}</th>
+                                                    <th>{item.w}</th>
+                                                    <th>{item.nb}</th>
+                                                    <th>{item.wd}</th>
+                                                </tr>
+
+                                            )
+                                        })}
+                                        {item.Innings[1].bowlers.map((item, i) => {
+                                            return (
+                                                <tr key={i}>
+                                                    <td>{this.player_name1(item.id)}</td>
+                                                    <td>{item.o}</td>
+                                                    <td>{item.m}</td>
+                                                    <td>{item.r}</td>
+                                                    <td>{item.w}</td>
+                                                    <td>{item.n}</td>
+                                                    <td>{item.wd}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </div>
+                                    <div>
+                                        <tr><th textAlign="center">PowerPlays</th>
+                                            <th textAlign="center">Overs</th>
+                                            <th textAlign="center">Runs</th>
+
+                                        </tr>
+
+                                        {item.Innings[1].pplay.map((item, i) => {
+                                            return (
+                                                <div>
+                                                    <tr><td textAlign="center">{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
+                                                        <td textAlign="center">{item.from}-{item.to}</td>
+                                                        <td textAlign="center">{item.runs}</td>
+
+                                                    </tr>
+                                                </div>
+                                            )
+
+                                        }
+                                        )
+                                        }
 
                                     </div>
-                                )
 
-                            }
-                            else {
-                                return (<div>
-                                    Not batted yet
-                                </div>)
-                            }
-                        }) : <p>Wait.. Data is fetching/</p>
+                                </div>
+                            )
+
                         }
+                        else {
+                            return (<div>
+                                Not batted yet
+                                </div>)
+                        }
+                    }) : <p>Wait.. Data is fetching/</p>
+                    }
 
 
 
-                    </tbody>
-                </table>
+                </tbody>
 
-            </div >
 
+            </table>
         )
 
     }

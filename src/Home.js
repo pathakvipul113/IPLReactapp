@@ -45,10 +45,11 @@ class Home extends Component {
                     this.interval = setInterval(() => {
                         let data = fetch(`http://mapps.cricbuzz.com/cbzios/match/${matchkiid}/commentary`).then((resp) => {
                             resp.json().then((resp) => {
+                                console.log("hi")
                                 this.setState({ data3: [resp] })
                             })
                         })
-                    }, 5000);
+                    }, 3000);
                 })
             })
             .catch(function (error) {
