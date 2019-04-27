@@ -11,3 +11,17 @@
     background: #ecebeb;
     
 }
+
+.hover{
+    cursor: pointer
+}
+
+.hover:hover{
+    color: blue
+    
+}
+
+.status{
+    color:red;
+    
+}
