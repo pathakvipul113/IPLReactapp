@@ -21,6 +21,11 @@ class Home extends Component {
         console.log("id", id)
     }
 
+    commentary(id) {
+        window.location.href = "/commentary/?matchId=" + id
+        console.log("id", id)
+    }
+
 
     componentDidMount() {
         // setInterval(function () {
@@ -49,7 +54,7 @@ class Home extends Component {
                                 this.setState({ data3: [resp] })
                             })
                         })
-                    }, 3000);
+                    }, 500);
                 })
             })
             .catch(function (error) {
@@ -66,11 +71,12 @@ class Home extends Component {
 
                         if (item.header.state === "inprogress" || item.header.state === "innings break")
                             return (
-                                < div key={key} onClick={this.handleClick.bind(this, item.match_id)} style={{ cursor: "pointer" }}>
-                                    <p style={{ background: 'black', color: 'white' }}><strong>{item.team1.name.toUpperCase()}</strong> vs <strong>{item.team2.name.toUpperCase()}</strong></p>
+                                < div key={key}  >
+                                    <p style={{ background: 'black', color: 'white', cursor: "pointer" }} onClick={this.handleClick.bind(this, item.match_id)}><strong>{item.team1.name.toUpperCase()}</strong> vs <strong>{item.team2.name.toUpperCase()}</strong></p>
+                                    <div onClick={this.commentary.bind(this, item.match_id)} style={{ cursor: "pointer" }}>Commentary</div>
                                 </div>
                             )
-                        else if (item.header.state === "preview" || item.header.state.includes("Starts")) {
+                        else if (item.header.state === "preview") {
                             return (
                                 < div key={key} onClick={this.handleClick.bind(this, item.match_id)} style={{ cursor: "pointer" }}>
                                     <p style={{ background: 'black', color: 'white' }} ><strong>{item.team1.name.toUpperCase()}</strong> vs <strong>{item.team2.name.toUpperCase()}</strong></p>
@@ -89,7 +95,7 @@ class Home extends Component {
                                             <strong>{item.bow_team.name}</strong> {item.bow_team.innings[0].score}/{item.bow_team.innings[0].wkts} ({item.bow_team.innings[0].overs} Ovs)
                  <p> <strong>{item.bat_team.name}</strong> {item.bat_team.innings[0].score}/{item.bat_team.innings[0].wkts} ({item.bat_team.innings[0].overs} Ovs)</p>
                                             <p><b> Batting </b></p>
-                                            <p> {item.batsman[0].name} {item.batsman[0].r}({item.batsman[0].b})</p>
+                                            <p> {item.batsman[0].name}* {item.batsman[0].r}({item.batsman[0].b})</p>
                                             {item.batsman[1] ?
                                                 <p>{item.batsman[1].name} {item.batsman[1].r}({item.batsman[1].b})</p>
                                                 : ""
@@ -112,7 +118,7 @@ class Home extends Component {
                                     {/* <strong>{item.bow_team.name}</strong> {item.bow_team.innings[0].score}/{item.bow_team.innings[0].wkts} ({item.bow_team.innings[0].overs} Ovs) */}
                                     <p> <strong>{item.bat_team.name}</strong> {item.bat_team.innings[0].score}/{item.bat_team.innings[0].wkts} ({item.bat_team.innings[0].overs} Ovs)</p>
                                     <p><b> Batting </b></p>
-                                    <p> {item.batsman[0].name} {item.batsman[0].r}({item.batsman[0].b})</p>
+                                    <p> {item.batsman[0].name}*  {item.batsman[0].r}({item.batsman[0].b})</p>
 
                                     {item.batsman[1] ?
                                         <p>{item.batsman[1].name} {item.batsman[1].r}({item.batsman[1].b})</p>
@@ -126,14 +132,9 @@ class Home extends Component {
 
                         }
                         else if (!item.hasOwnProperty('bow_team') && !item.hasOwnProperty('bat_team')) {
-
-                            return (
-                                <div>
-                                    {/* < div key={key} onClick={this.handleClick.bind(this, item.match_id)} style={{ cursor: "pointer" }}>
-                                        <p style={{ background: 'black', color: 'white' }} ><strong>{item.team1.name.toUpperCase()}</strong> vs <strong>{item.team2.name.toUpperCase()}</strong></p>
-                                    </div> */}
-                                    <b>Match not started yet</b>
-                                </div>
+                            return (<div>
+                                <b>  Match not started yet</b>
+                            </div>
                             )
 
                         }

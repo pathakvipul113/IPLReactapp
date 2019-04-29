@@ -33,7 +33,8 @@ class Scorecard extends Component {
             data3: [],
             team: [],
             squad1: [],
-            squad2: []
+            squad2: [],
+            data4: {}
         }
     }
     onClick() {
@@ -70,11 +71,11 @@ class Scorecard extends Component {
                     let matchInfo = resp.matches.find(item => item.match_id === matchId)
                     // let matchInfo1 = resp.matches.find(item => item.header.state === "preview" || item.header.state === "complete")
                     // console.log(matchInfo)
-                    if (matchInfo.header.state === "inprogress" && matchInfo.header) {
-                        console.log(matchInfo)
+                    if (matchInfo.header.state === "inprogress" || matchInfo.header.state === "innings break" && matchInfo.header) {
+                        // console.log(matchInfo)
                         matchkiid = matchInfo.match_id;
                         team_id1 = matchInfo.bat_team.id;
-                        console.log(team_id1)
+                        // console.log(team_id1)
                         team_id2 = matchInfo.bow_team.id;
                     }
 
@@ -89,7 +90,7 @@ class Scorecard extends Component {
                     this.setState({ data2: resp.matches })
                     let squad1 = fetch(`http://mapps.cricbuzz.com/cbzios/series/2810/teams/${team_id1}/squads`).then((resp) => {
                         resp.json().then((resp) => {
-                            console.log(resp)
+                            // console.log(resp)
                             this.setState({
                                 squad1: resp
                             })
@@ -104,27 +105,41 @@ class Scorecard extends Component {
                             })
                         })
                     })
-
-                    let data = fetch(`http://mapps.cricbuzz.com/cbzios/match/${matchId}/scorecard.json`).then((resp1) => {
-                        resp1.json().then((resp1) => {
-                            this.setState({ data3: [resp1] })
+                    this.interval = setInterval(() => {
+                        let data = fetch(`http://mapps.cricbuzz.com/cbzios/match/${matchId}/scorecard.json`).then((resp1) => {
+                            resp1.json().then((resp1) => {
+                                // console.log([resp1])
+                                this.setState({ data3: [resp1] })
+                            })
                         })
-                    })
+                    }, 1000);
                 })
             })
             .catch(function (error) {
                 console.log(error);
             });
+
+
+        let comm = fetch(`http://mapps.cricbuzz.com/cbzios/match/${matchId}`).then((resp2) => {
+            resp2.json().then((resp2) => {
+                // console.log(resp2)
+                this.setState({
+                    data4: [resp2]
+                })
+            })
+        })
     }
 
 
     render() {
         var list = []
         var list1 = []
+        var list2 = []
+
 
         return (
             <table className="table">
-                <thead>
+                {/* <thead>
                     {heading.map((item, i) => {
                         return (
                             <tr key={i} className="back">
@@ -138,7 +153,7 @@ class Scorecard extends Component {
 
                         )
                     })}
-                </thead>
+                </thead> */}
 
                 {this.state.data3 ? this.state.data3.map((item, key) => {
                     if (item.Innings[0])
@@ -241,7 +256,7 @@ class Scorecard extends Component {
                                     })}
                                 </div>
                                 <div>
-                                    <tr><th textAlign="center">PowerPlays</th>
+                                    <tr className="back"><th textAlign="center">PowerPlays</th>
                                         <th textAlign="center">Overs</th>
                                         <th textAlign="center">Runs</th>
 
@@ -269,9 +284,15 @@ class Scorecard extends Component {
 
                     }
                     else {
-                        return (<div>
-                            Not batted yet
-                                </div>)
+
+
+                        return (
+                            <div>
+
+                            </div>
+
+                        )
+
                     }
                 }) : <p>Wait.. Data is fetching/</p>
                 }
@@ -296,7 +317,7 @@ class Scorecard extends Component {
                     }
                     ) : <p>Wait.. Data is fetching/</p>}
                 </div>
-                {heading.map((item, i) => {
+                {/* {heading.map((item, i) => {
                     return (
                         <tr key={i}>
                             <th>{item.batsman}</th>
@@ -308,7 +329,7 @@ class Scorecard extends Component {
                         </tr>
 
                     )
-                })}
+                })} */}
                 <tbody>
                     {this.state.data3 ? this.state.data3.map((item, key) => {
                         if (item.Innings[0] && item.Innings[1]) {
@@ -341,7 +362,7 @@ class Scorecard extends Component {
                                         <tr><td>Total</td><td style={{ textAlign: 'right' }}> {item.Innings[1].score}({item.Innings[1].wkts}wkts, {item.Innings[1].ovr} Ovs)</td></tr>
                                         <tr><td>{item.Innings[0].next_batsman_label}</td><td textAlign="right">{list1}</td></tr>
                                     </div>
-                                    <div>
+                                    <div className="back">
                                         Fall of Wickets
                                                  <th>Batsman</th>
                                         <th>Score</th>
@@ -358,7 +379,7 @@ class Scorecard extends Component {
                                         })}
                                     </div>
 
-                                    <div>
+                                    <div className="back">
                                         {bowling.map((item, i) => {
                                             return (
                                                 <tr key={i}>
@@ -388,7 +409,7 @@ class Scorecard extends Component {
                                         })}
                                     </div>
                                     <div>
-                                        <tr><th textAlign="center">PowerPlays</th>
+                                        <tr className="back"><th textAlign="center">PowerPlays</th>
                                             <th textAlign="center">Overs</th>
                                             <th textAlign="center">Runs</th>
 
@@ -416,9 +437,65 @@ class Scorecard extends Component {
 
                         }
                         else {
-                            return (<div>
-                                Not batted yet
-                                </div>)
+                            return (
+                                <div>
+
+                                    {
+                                        this.state.data4 ? this.state.data4.map((item, key) => {
+                                            // if (item.team1.squad_bench)
+                                            //     console.log(item.team1.squad_bench)
+                                            // for (var i = 0; i < (item.team1.squad_bench).length; i++) {
+                                            //     list2.push(this.player_name1((item.team1.squad_bench)[i]))
+                                            //     console.log(list2)
+                                            // }
+
+                                            return (
+                                                <div>
+                                                    <h3>Match Info</h3>
+                                                    <tr>
+                                                        <td>Match</td>
+                                                        <td>{item.team1.s_name} vs {item.team2.s_name}, {item.header.match_desc}, Indian Premier League 2019 </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Toss</td>
+                                                        <td>{item.header.toss ? item.header.toss : "Toss still to come"}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Venue</td>
+                                                        <td>{item.venue.name}, {item.venue.location}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Umpires</td>
+                                                        <td>{item.official.umpire1.name}, {item.official.umpire2.name}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Third Umpire</td>
+                                                        <td>{item.official.umpire3.name}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Match Refree</td>
+                                                        <td>{item.official.referee.name}</td>
+                                                    </tr>
+                                                    {/* <tr>
+
+                                                        <tr><td>{item.team1.name} Squad</td></tr>
+                                                        <tr><td>Playing XI</td>
+                                                            <td>{item.team1.squad}</td>
+                                                        </tr>
+                                                    </tr> */}
+
+                                                </div>
+
+                                            )
+
+                                        }) : <div> Data is fetching</div>
+                                    }
+
+                                </div>
+
+                            )
                         }
                     }) : <p>Wait.. Data is fetching/</p>
                     }
