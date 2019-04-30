@@ -362,7 +362,7 @@ class Scorecard extends Component {
                                         <tr><td>Total</td><td style={{ textAlign: 'right' }}> {item.Innings[1].score}({item.Innings[1].wkts}wkts, {item.Innings[1].ovr} Ovs)</td></tr>
                                         <tr><td>{item.Innings[0].next_batsman_label}</td><td textAlign="right">{list1}</td></tr>
                                     </div>
-                                    <div className="back">
+                                    <div>
                                         Fall of Wickets
                                                  <th>Batsman</th>
                                         <th>Score</th>
@@ -379,7 +379,7 @@ class Scorecard extends Component {
                                         })}
                                     </div>
 
-                                    <div className="back">
+                                    <div>
                                         {bowling.map((item, i) => {
                                             return (
                                                 <tr key={i}>
@@ -468,15 +468,16 @@ class Scorecard extends Component {
 
                                                     <tr>
                                                         <td>Umpires</td>
-                                                        <td>{item.official.umpire1.name}, {item.official.umpire2.name}</td>
+                                                        {item.official ?
+                                                            <td>{item.official.umpire1.name}, {item.official.umpire2.name}</td> : ""}
                                                     </tr>
                                                     <tr>
                                                         <td>Third Umpire</td>
-                                                        <td>{item.official.umpire3.name}</td>
+                                                        <td>{item.official ? item.official.umpire3.name : ""}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Match Refree</td>
-                                                        <td>{item.official.referee.name}</td>
+                                                        <td>{item.official ? item.official.referee.name : ""}</td>
                                                     </tr>
                                                     {/* <tr>
 
